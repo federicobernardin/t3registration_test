@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<T3locallang>
+	<meta type="array">
+		<type>database</type>
+		<description>Language labels for database tables/fields belonging to extension 'test_t3registration'</description>
+	</meta>
+	<data type="array">
+		<languageKey index="default" type="array">
+			<label index="backend_layout.tx_t3registrationtest_select.I.0">item1</label>
+			<label index="backend_layout.tx_t3registrationtest_select.I.1">item2</label>
+			<label index="backend_layout.tx_t3registrationtest_select.I.2">item3</label>
+			<label index="backend_layout.tx_t3registrationtest_select.I.3">item4</label>
+			<label index="backend_layout.tx_t3registrationtest_select">select</label>
+			<label index="backend_layout.tx_t3registrationtest_radio.I.0">radio1</label>
+			<label index="backend_layout.tx_t3registrationtest_radio.I.1">radio2</label>
+			<label index="backend_layout.tx_t3registrationtest_radio.I.2">radio3</label>
+			<label index="backend_layout.tx_t3registrationtest_radio.I.3">radio4</label>
+			<label index="backend_layout.tx_t3registrationtest_radio">radio</label>
+			<label index="backend_layout.tx_t3registrationtest_check">check</label>
+			<label index="backend_layout.tx_t3registrationtest_checkmultiple.I.0">check1</label>
+			<label index="backend_layout.tx_t3registrationtest_checkmultiple.I.1">check2</label>
+			<label index="backend_layout.tx_t3registrationtest_checkmultiple.I.2">check3</label>
+			<label index="backend_layout.tx_t3registrationtest_checkmultiple.I.3">check4</label>
+			<label index="backend_layout.tx_t3registrationtest_checkmultiple.I.4">check5</label>
+			<label index="backend_layout.tx_t3registrationtest_checkmultiple.I.5">check6</label>
+			<label index="backend_layout.tx_t3registrationtest_checkmultiple.I.6">check7</label>
+			<label index="backend_layout.tx_t3registrationtest_checkmultiple.I.7">check8</label>
+			<label index="backend_layout.tx_t3registrationtest_checkmultiple.I.8">check9</label>
+			<label index="backend_layout.tx_t3registrationtest_checkmultiple.I.9">check10</label>
+			<label index="backend_layout.tx_t3registrationtest_checkmultiple">checkmultiple</label>
+		</languageKey>
+	</data>
+</T3locallang>
