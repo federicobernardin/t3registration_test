@@ -18,6 +18,18 @@ $tempColumns = array (
 			'maxitems' => 1,
 		)
 	),
+    'tx_t3registrationtest_select_foreign' => array (
+        'exclude' => 0,
+        'label' => 'LLL:EXT:test_t3registration/locallang_db.xml:backend_layout.tx_t3registrationtest_select_foreign',
+        'config' => array (
+            'type' => 'select',
+            'items' => array (
+            ),
+            'foreign_table' => 'fe_users',
+            'size' => 1,
+            'maxitems' => 1,
+        )
+    ),
 	'tx_t3registrationtest_radio' => array (
 		'exclude' => 0,		
 		'label' => 'LLL:EXT:test_t3registration/locallang_db.xml:backend_layout.tx_t3registrationtest_radio',
@@ -58,10 +70,29 @@ $tempColumns = array (
 			),
 		)
 	),
+    'tx_t3registrationtest_procFunc' => array (
+        'exclude' => 0,
+        'label' => 'LLL:EXT:test_t3registration/locallang_db.xml:backend_layout.tx_t3registrationtest_procFunc',
+        'config' => array (
+            'type' => 'radio',
+            'items' => array (
+                array('LLL:EXT:test_t3registration/locallang_db.xml:backend_layout.tx_t3registrationtest_procFunc.I.0', ''),
+            ),
+            'itemsProcFunc' => 'EXT:test_t3registration/library/class.tx_t3registrationtest_tca.php:tx_t3registrationtest_tca->getProcFunc'
+        )
+    ),
+    'tx_t3registrationtest_date' => array (
+        'exclude' => 0,
+        'label' => 'LLL:EXT:test_t3registration/locallang_db.xml:backend_layout.tx_t3registrationtest_date',
+        'config' => array (
+            'type' => 'input',
+            'eval' => 'trim,date'
+        )
+    ),
 );
 
 
 t3lib_div::loadTCA('fe_users');
 t3lib_extMgm::addTCAcolumns('fe_users',$tempColumns,1);
-t3lib_extMgm::addToAllTCAtypes('fe_users','tx_t3registrationtest_select;;;;1-1-1, tx_t3registrationtest_radio, tx_t3registrationtest_check, tx_t3registrationtest_checkmultiple');
+t3lib_extMgm::addToAllTCAtypes('fe_users','tx_t3registrationtest_select;;;;1-1-1, tx_t3registrationtest_radio, tx_t3registrationtest_check, tx_t3registrationtest_checkmultiple,tx_t3registrationtest_procFunc,tx_t3registrationtest_date');
 ?>

@@ -11,8 +11,8 @@
 ########################################################################
 
 $EM_CONF[$_EXTKEY] = array(
-	'title' => 'T3Registration Test Extension',
-	'description' => '',
+	'title' => 'test T3Registration',
+	'description' => 'T3Registration Test environment extension',
 	'category' => 'fe',
 	'author' => 'Federico',
 	'author_email' => 'federico@bernardin.it',
@@ -26,7 +26,7 @@ $EM_CONF[$_EXTKEY] = array(
 	'uploadfolder' => 0,
 	'createDirs' => '',
 	'modify_tables' => '',
-	'clearCacheOnLoad' => 1,
+	'clearCacheOnLoad' => 0,
 	'lockType' => '',
 	'author_company' => '',
 	'version' => '0.1.0',

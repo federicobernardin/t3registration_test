@@ -6,6 +6,10 @@ CREATE TABLE fe_users (
 	tx_t3registrationtest_radio varchar(255) DEFAULT '' NOT NULL,
 	tx_t3registrationtest_check tinyint(3) DEFAULT '0' NOT NULL,
 	tx_t3registrationtest_checkmultiple int(11) DEFAULT '0' NOT NULL
+	tx_t3registrationtest_select_foreign varchar(255) DEFAULT '' NOT NULL,
+	tx_t3registrationtest_procFunc varchar(255) DEFAULT '' NOT NULL,
+	tx_t3registrationtest_date int(11) DEFAULT 0 NOT NULL
+
 );
 
 #
@@ -48,7 +52,10 @@ CREATE TABLE tx_t3registration_test_users (
   tx_t3registrationtest_select varchar(255) DEFAULT '' NOT NULL,
   tx_t3registrationtest_radio varchar(255) DEFAULT '' NOT NULL,
   tx_t3registrationtest_check tinyint(3) DEFAULT '0' NOT NULL,
-  tx_t3registrationtest_checkmultiple int(11) DEFAULT '0' NOT NULL,
+  tx_t3registrationtest_checkmultiple int(11) DEFAULT '0' NOT NULL
+  tx_t3registrationtest_select_foreign varchar(255) DEFAULT '' NOT NULL,
+  tx_t3registrationtest_procFunc varchar(255) DEFAULT '' NOT NULL,
+  tx_t3registrationtest_date int(11) DEFAULT 0 NOT NULL,
   PRIMARY KEY (uid),
   KEY parent (pid,username),
   KEY username (username),
