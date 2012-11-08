@@ -32,6 +32,13 @@
             <label index="backend_layout.tx_t3registrationtest_procFunc">Proc Func Field</label>
             <label index="backend_layout.tx_t3registrationtest_procFunc.I.0">choose one</label>
             <label index="backend_layout.tx_t3registrationtest_date">Data di nascita</label>
+
+            <label index="emconf.tx_t3registrationtest_emailForTest">test sending email</label>
+            <label index="emconf.tx_t3registrationtest_pop3Server">Pop3 address server</label>
+            <label index="emconf.tx_t3registrationtest_pop3Username">Pop3 username</label>
+            <label index="emconf.tx_t3registrationtest_pop3Password">Pop3 password</label>
+            <label index="emconf.tx_t3registrationtest_remoteEmail">Remote email configurations</label>
+            <label index="emconf.tx_t3registrationtest_pageUid">Pagina con il plugin</label>
 		</languageKey>
 	</data>
 </T3locallang>

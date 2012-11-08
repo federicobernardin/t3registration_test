@@ -1,0 +1,12 @@
+	# cat=basic/email; type=input; label=LLL:EXT:t3registration_test/emconf.tx_t3registrationtest_emailForTest
+emailForTest = test@example.it
+
+	# customsubcategory=remoteEmail=LLL:EXT:t3registration_test/locallang_db.xml:emconf.tx_t3registrationtest_remoteEmail; cat=basic/remoteEmail; type=input; label=LLL:EXT:t3registration_test/locallang_db.xml:emconf.tx_t3registrationtest_pop3Server
+pop3Server = pop3.example.it
+	# customsubcategory=remoteEmail=LLL:EXT:t3registration_test/locallang_db.xml:emconf.tx_t3registrationtest_remoteEmail; cat=basic/remoteEmail; type=input; label=LLL:EXT:t3registration_test/locallang_db.xml:emconf.tx_t3registrationtest_pop3Username
+pop3Username = test@example.it
+	# customsubcategory=remoteEmail=LLL:EXT:t3registration_test/locallang_db.xml:emconf.tx_t3registrationtest_remoteEmail; cat=basic/remoteEmail; type=input; label=LLL:EXT:t3registration_test/locallang_db.xml:emconf.tx_t3registrationtest_pop3Password
+pop3Password = password
+
+	# cat=basic/pageid; type=int; label=LLL:EXT:t3registration_test/emconf.tx_t3registrationtest_pageUid
+pageId = 0
