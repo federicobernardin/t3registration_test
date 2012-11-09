@@ -8,7 +8,7 @@
  */
 class tx_t3registrationtest_hooks {
 
-    public function test($params,$pObj){
+    public function test(&$params,$pObj){
         /*$mail = t3lib_div::makeInstance('tx_t3registrationtest_mail');
         $mail->initialize();
         $mail->searchForIncomingEmailByGUID('xxx-xxx-xxx');*/
@@ -52,7 +52,7 @@ class tx_t3registrationtest_hooks {
                                 }
                                 break;
                             default:
-                                $params['piVars'] = array(
+                                $params['data'] = array(
                                     'email' => 'email@noncorretta',
                                     'password' => 'pluto',
                                     'passwordTwice' => 'iiiii',

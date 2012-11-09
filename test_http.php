@@ -9,25 +9,31 @@
 
 require_once('library/class.tx_t3registrationtest_http.php');
 
+class pippo{
 
-
+    public function test(){
         $http = tx_t3registrationtest_http::sendHTTP('http://t3r6/?eID=t3registration_test&enabletest=1&step=evaluation');
 //echo($http);
-$retVal = preg_match_all('/<div class="tx-t3registration-pi1">(.*)<\/div>/iUs',$http,$pippo);
+//$retVal = preg_match_all('/<div class="tx-t3registration-pi1">(.*)<\/div>/iUs',$http,$pippo);
 
-$doc = new DOMDocument;
+        $doc = new DOMDocument;
 
-$doc->loadHTML($http);
+        $doc->loadHTML($http);
 
-$xpath = new DOMXPath($doc);
+        $xpath = new DOMXPath($doc);
 
-$body = $doc->getElementsByTagName('body')->item(0);
-$entries = $xpath->query('//div[@id="passwordField"]/div[@class="errorT3RegistrationClass"]',$body);
-print_r(count($entries));
+        $this->body = $doc->getElementsByTagName('body')->item(0);
+        $entries = $xpath->query('//div[@id="passwordField"]/div[@class="errorT3RegistrationClass"]',$this->body);
+        print_r(count($entries));
 //$doc->getElementById('passwordField');
-foreach ($entries as $entry) {
-    echo "Found {$entry->nodeValue}," ;
+        foreach ($entries as $entry) {
+            echo "Found {$entry->nodeValue}," ;
+        }
+    }
 }
+
+ $pippo = new pippo();
+$pippo->test();
 //if();
 //print_r($tbody->getElementsByTagName('div')->item(0)->nodeValue);
 
