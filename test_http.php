@@ -30,10 +30,15 @@ class pippo{
             echo "Found {$entry->nodeValue}," ;
         }
     }
+
+    public function prova(){
+
+        print_r(preg_match('/^[a-zA-Z\s]+$/', 'testofregukarexpression 44444'));
+    }
 }
 
  $pippo = new pippo();
-$pippo->test();
+$pippo->prova();
 //if();
 //print_r($tbody->getElementsByTagName('div')->item(0)->nodeValue);
 
