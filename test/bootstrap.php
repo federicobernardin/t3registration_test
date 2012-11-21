@@ -1,6 +1,6 @@
 <?php
-//$pathSite = getenv('sitepath');
-$pathSite = '/Users/federico/Sites/TYPO3/typo3v6/';
+$pathSite = getenv('sitepath');
+//$pathSite = '/Users/federico/Sites/TYPO3/typo3v6/';
 if ($pathSite == ''){
 die('sitepath not set in env variable');
 }

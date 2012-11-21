@@ -92,6 +92,15 @@ class tx_t3registrationtest_evaluation_test  extends PHPUnit_Framework_TestCase{
         $this->assertEquals(0,$this->object->evaluateTest('test of regular expression with special chars: %&$§','regexp',$field));
     }
 
+
+    public function testEvaluationPassword(){
+        $field['config']['maxchars'] = 10;
+        $field['config']['minchars'] = 3;
+        $this->assertTrue($this->object->evaluateTest('1234567890','password',$field));
+        $this->assertFalse($this->object->evaluateTest('12','password',$field));
+        $this->assertFalse($this->object->evaluateTest('123456789012','password',$field));
+    }
+
     /**
      * This function checks if date requirements are satisfied
      * @param string $timezone
