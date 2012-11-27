@@ -29,10 +29,10 @@ class tx_t3registrationtest_evaluation_test  extends PHPUnit_Framework_TestCase{
     protected $object;
 
     public function setUp(){
-        $this->configuration = $GLOBALS['T3RegistrationConfiguration'];
+        /*$this->configuration = $GLOBALS['T3RegistrationConfiguration'];
         $this->doc = new DOMDocument;
         $this->body = new DOMNode;
-        $this->object = new T3RegistrationTest();
+        $this->object = new T3RegistrationTest(); */
     }
 
     public function testEvaluationStandardRulesFromWeb()
