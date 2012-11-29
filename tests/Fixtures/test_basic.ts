@@ -15,4 +15,6 @@ plugin.tx_t3registration_pi1{
    fieldConfiguration.tx_t3registrationtest_date.config.date.strftime = d.m.Y
    errors.classError = errorT3RegistrationClass
    templateFile = EXT:t3registration_test/res/template_test.html
+   fieldConfiguration.tx_phpunit_is_dummy_record.config.type = hidden
+   fieldConfiguration.tx_phpunit_is_dummy_record.config.default = 1
  }

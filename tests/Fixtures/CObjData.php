@@ -98,12 +98,6 @@ $tt_contentData = array (
                 <field index="confirmationPage">
                     <value index="vDEF"></value>
                 </field>
-                <field index="preUsergroup">
-                    <value index="vDEF">1</value>
-                </field>
-                <field index="postUsergroup">
-                    <value index="vDEF">2</value>
-                </field>
                 <field index="passwordGeneration">
                     <value index="vDEF">0</value>
                 </field>
@@ -382,6 +376,28 @@ $tt_contentData = array (
                                     </field>
                                     <field index="hideInChangeProfile">
                                         <value index="vDEF">0</value>
+                                    </field>
+                                </el>
+                            </itemType>
+                            <itemType index="_TOGGLE">0</itemType>
+                        </section>
+                        <section index="12">
+                            <itemType index="databaseField">
+                                <el>
+                                    <field index="field">
+                                        <value index="vDEF">tx_phpunit_is_dummy_record</value>
+                                    </field>
+                                    <field index="name">
+                                        <value index="vDEF"></value>
+                                    </field>
+                                    <field index="evaluation">
+                                        <value index="vDEF"></value>
+                                    </field>
+                                    <field index="regexp">
+                                        <value index="vDEF"></value>
+                                    </field>
+                                    <field index="hideInChangeProfile">
+                                        <value index="vDEF">1</value>
                                     </field>
                                 </el>
                             </itemType>

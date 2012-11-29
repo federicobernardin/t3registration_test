@@ -105,19 +105,18 @@ class BasicTest extends tx_phpunit_testcase {
     /**
      * @test
      */
-    /*public function ExecutesASubmitWithEmptyFieldsShouldBeRaiseAnError() {
+    public function ExecutesASubmitWithEmptyFieldsShouldBeRaiseAnError() {
         $setup[] = file_get_contents(t3lib_extMgm::extPath('t3registration_test', 'Tests/Fixtures/test_basic.ts'));
         $constant[] = file_get_contents(t3lib_extMgm::extPath('t3registration_test', 'Tests/Fixtures/test_basic_const.ts'));
         $this->conf = $this->generateTyposcriptSetup($setup,$constant);
         $_POST['tx_t3registration_pi1']['submitted'] = 1;
         $html = $this->loadExtension();
-        debug($html);
-        exit;
         $this->body = $this->getDomRootFromHTML($html);
         //$expectedText = 'Username not properly configured';
         $this->checkError('passwordField','Password is not correct');
+        $this->checkError('emailField','Email is not correct');
         //$this->assertEquals($expectedText,$entries->item(0)->nodeValue,'Value node is as expected');
-    }*/
+    }
 
     /**
      * Function to test each error into the form
@@ -125,10 +124,8 @@ class BasicTest extends tx_phpunit_testcase {
      * @param $expectedText
      */
     protected function checkError($id,$expectedText){
-        $entries = $this->xpath->query('//div[@id="' . $id . '"]/div[@class="' . $this->errorClass . '"]',$this->body);
+        $entries = $this->xpath->query('//div[@id="' . $id . '"]/div[@class="' . $this->errorClass . '"]');
         $this->assertNotEquals(false,$entries);
-        debug($entries->length);
-        exit;
         $this->assertEquals(1,$entries->length);
         $this->assertEquals($expectedText,$entries->item(0)->nodeValue);
     }
@@ -174,10 +171,6 @@ class BasicTest extends tx_phpunit_testcase {
         foreach ($additionalTyposcriptConstants as $additionalConstants) {
             $this->tstemplate->constants[] = $additionalConstants;
         }
-        /*if(count($additionalTyposcriptConstants)){
-            debug($this->tstemplate->constants);
-            exit;
-        }*/
         $this->tstemplate->generateConfig();
         return $this->tstemplate->setup['plugin.']['tx_t3registration_pi1.'];
     }
@@ -203,7 +196,6 @@ class BasicTest extends tx_phpunit_testcase {
                 $setup = file_get_contents(t3lib_extMgm::extPath('t3registration', 'ext_typoscript_constants.txt'));
                 break;
         }
-
         return $setup;
     }
 
@@ -217,12 +209,7 @@ class BasicTest extends tx_phpunit_testcase {
         $html = '<html><body>' . $html . '</body></html>';
         $this->doc = new DOMDocument;
         $this->body = new DOMNode;
-
-        if(!$this->doc->loadHTML($html)){
-            debug('error: ' . $html);
-            exit;
-        }
-
+        $this->doc->loadHTML($html);
         $this->xpath = new DOMXPath($this->doc);
         return $this->doc->getElementsByTagName('body')->item(0);
     }
