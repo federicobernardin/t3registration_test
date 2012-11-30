@@ -64,7 +64,7 @@ class BasicTest extends tx_phpunit_testcase {
     public function loadConfigurationShouldBeCallableT3Registration() {
         /*echo(var_export($this->loadExtension(),true));
         exit;*/
-        $this->assertEquals('typo3conf/ext/t3registration/pi1/class.tx_t3registration_pi1.php', $this->conf['includeLibs'], 'IncludeLibs not fopund on configuration array');
+        $this->assertEquals('typo3conf/ext/t3registration/pi1/class.tx_t3registration_pi1.php', $this->conf['includeLibs'], 'IncludeLibs not found on configuration array');
         $this->assertEquals('tx_t3registration_pi1->main', $this->conf['userFunc'],'userFunc wrong in configuration array');
         $this->assertTrue(file_exists(PATH_site . $this->conf['includeLibs']), 't3registration class not found');
         $methodAndClass = explode('->', $this->conf['userFunc']);

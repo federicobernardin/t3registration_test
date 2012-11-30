@@ -37,6 +37,9 @@ $userCorrectForDatabaseUserConfirmation = array(
     'user_auth_code' =>  'aaaaaaaaaaaaaaaaaaaaa',
 );
 
+
+$adminAuthCode = 'bbbbbbbbbbbbbbbbbbbbbb';
+
 $userForUpdate = $userCorrectForDatabaseInsertion;
 
 $userForUpdate['usergroup'] = $userGroupsAfterConfirmation['usergroup'];

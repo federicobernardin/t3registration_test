@@ -101,12 +101,6 @@ $tt_contentData = array (
                 <field index="passwordGeneration">
                     <value index="vDEF">0</value>
                 </field>
-                <field index="autoLoginAfterConfirmation">
-                    <value index="vDEF">1</value>
-                </field>
-                <field index="approvalProcess">
-                    <value index="vDEF">doubleOptin</value>
-                </field>
                 <field index="contactEmailMode">
                     <value index="vDEF">html,text</value>
                 </field>
