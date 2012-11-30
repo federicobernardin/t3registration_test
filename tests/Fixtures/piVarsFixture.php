@@ -22,7 +22,7 @@ $userGroupsAfterConfirmation = array(
 );
 
 
-$userCorrectForDatabaseInsertion = array(
+$userCorrectForPiVars = array(
     'first_name' => 'TestName',
     'last_name' => 'TestSurname',
     'email' => 'testunit@bernardin.it',
@@ -32,14 +32,28 @@ $userCorrectForDatabaseInsertion = array(
     'tx_phpunit_is_dummy_record' =>  1,
 );
 
+
+$userCorrectForDatabaseInsertion = array(
+    'first_name' => 'TestName',
+    'last_name' => 'TestSurname',
+    'email' => 'testunit@bernardin.it',
+    'password' => 'abcdefg',
+    'tx_t3registrationtest_check' =>  1,
+    'tx_t3registrationtest_date' =>  1260576000,
+    'tx_phpunit_is_dummy_record' =>  1,
+);
+
 $userCorrectForDatabaseUserConfirmation = array(
     'email' => 'testunit@bernardin.it',
     'user_auth_code' =>  'aaaaaaaaaaaaaaaaaaaaa',
 );
 
 
+
+
 $adminAuthCode = 'bbbbbbbbbbbbbbbbbbbbbb';
 
 $userForUpdate = $userCorrectForDatabaseInsertion;
+$userForUpdate['last_name'] = 'TestSurnameChanged';
 
-$userForUpdate['usergroup'] = $userGroupsAfterConfirmation['usergroup'];
+$userCorrectForPiVarsUpdate = array_merge($userCorrectForPiVars,array('last_name' => $userForUpdate['last_name']),$piVarsBaseForInsertingUser);
