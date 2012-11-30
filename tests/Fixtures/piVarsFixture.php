@@ -37,6 +37,7 @@ $userCorrectForDatabaseInsertion = array(
     'first_name' => 'TestName',
     'last_name' => 'TestSurname',
     'email' => 'testunit@bernardin.it',
+    'username' => 'testunit@bernardin.it',
     'password' => 'abcdefg',
     'tx_t3registrationtest_check' =>  1,
     'tx_t3registrationtest_date' =>  1260576000,
@@ -55,5 +56,6 @@ $adminAuthCode = 'bbbbbbbbbbbbbbbbbbbbbb';
 
 $userForUpdate = $userCorrectForDatabaseInsertion;
 $userForUpdate['last_name'] = 'TestSurnameChanged';
+$userForUpdateEmail['email'] = 'testunitchanged@bernardin.it';
 
 $userCorrectForPiVarsUpdate = array_merge($userCorrectForPiVars,array('last_name' => $userForUpdate['last_name']),$piVarsBaseForInsertingUser);

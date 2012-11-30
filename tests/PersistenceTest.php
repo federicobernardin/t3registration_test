@@ -141,6 +141,35 @@ class PersistenceTest extends Tx_Phpunit_Database_TestCase {
 
 
     /**
+     * User completes registration process without double opt-in but post usergroup and usergroup are passed via pivars
+     * @test
+     */
+    public function UserCompletesRegistrationProcessWithoutConfirmationProcessWithUsergroupPassedViaPivarsButPostUsergroupsShouldConfirmUserAndUpdateUsergroupsAndNoEmailIsSent() {
+        $setup[] = file_get_contents(t3lib_extMgm::extPath('t3registration_test', 'Tests/Fixtures/test_basic.ts'));
+        $constant[] = file_get_contents(t3lib_extMgm::extPath('t3registration_test', 'Tests/Fixtures/test_basic_const.ts'));
+        $this->conf = $this->generateTyposcriptSetup($setup,$constant);
+        $this->conf['postUsergroup'] = '3,4';
+        require(t3lib_extMgm::extPath('t3registration_test', 'Tests/Fixtures/piVarsFixture.php'));
+        $userCorrectForDatabaseInsertion = array_merge($userCorrectForPiVars,$piVarsBaseForInsertingUser);
+        $userCorrectForDatabaseInsertion['usergroup'] = '4,5';
+        $_POST['tx_t3registration_pi1'] = $userCorrectForDatabaseInsertion;
+        require(t3lib_extMgm::extPath('t3registration_test', 'Tests/Fixtures/CObjData.php'));
+        $this->initializeCobj($tt_contentDataWithUsergroup);
+        $t3RegistrationMock = $this->getMock('tx_t3registration_pi1',array('sendEmail'));
+        $t3RegistrationMock->expects(new PHPUnit_Framework_MockObject_Matcher_InvokedCount(0))->method('send');
+        $html = $this->loadExtension();
+        $this->assertTrue($this->fixture->existsExactlyOneRecord('fe_users','tx_phpunit_is_dummy_record=1'));
+        $user = $this->findUserByEmail($userCorrectForDatabaseInsertion['email'],false);
+        $this->assertEquals(0,strlen($user['user_auth_code']));
+        $this->assertEquals(0,$user['disable']);
+        $this->assertEquals('4,5,3',$user['usergroup']);
+    }
+
+
+
+
+
+    /**
      * User completes registration process with double opt-in
      * @test
      */
@@ -161,6 +190,34 @@ class PersistenceTest extends Tx_Phpunit_Database_TestCase {
         $this->assertGreaterThan(0,strlen($user['user_auth_code']));
         $this->assertEquals(1,$user['disable']);
         $this->assertEquals('3,4',$user['usergroup']);
+    }
+
+
+
+    /**
+     * User completes registration process with double opt-in and passing usergroup Via PiVars
+     * @test
+     */
+    public function UserCompletesRegistrationProcessWithDoubleOptinAndUsergroupViaPivarsShouldCreateUserAndDisableUserAndSendHimAnEmail() {
+        $setup[] = file_get_contents(t3lib_extMgm::extPath('t3registration_test', 'Tests/Fixtures/test_basic.ts'));
+        $constant[] = file_get_contents(t3lib_extMgm::extPath('t3registration_test', 'Tests/Fixtures/test_basic_const.ts'));
+        $this->conf = $this->generateTyposcriptSetup($setup,$constant);
+        $this->conf['approvalProcess'] = 'doubleOptin';
+        $this->conf['preUsergroup'] = '3,4';
+        require(t3lib_extMgm::extPath('t3registration_test', 'Tests/Fixtures/piVarsFixture.php'));
+        $userCorrectForDatabaseInsertion = array_merge($userCorrectForPiVars,$piVarsBaseForInsertingUser);
+        $userCorrectForDatabaseInsertion['usergroup'] = '4,5';
+        require(t3lib_extMgm::extPath('t3registration_test', 'Tests/Fixtures/CObjData.php'));
+        $this->initializeCobj($tt_contentDataWithUsergroup);
+        $_POST['tx_t3registration_pi1'] = $userCorrectForDatabaseInsertion;
+        $t3RegistrationMock = $this->getMock('tx_t3registration_pi1',array('sendEmail'));
+        $t3RegistrationMock->expects($this->once())->method('sendEmail');
+        $html = $this->loadExtension($t3RegistrationMock);
+        $this->assertTrue($this->fixture->existsExactlyOneRecord('fe_users','tx_phpunit_is_dummy_record=1'));
+        $user = $this->findUserByEmail($userCorrectForDatabaseInsertion['email'],false);
+        $this->assertGreaterThan(0,strlen($user['user_auth_code']));
+        $this->assertEquals(1,$user['disable']);
+        $this->assertEquals('4,5,3',$user['usergroup']);
     }
 
 
@@ -421,6 +478,35 @@ class PersistenceTest extends Tx_Phpunit_Database_TestCase {
         $this->assertEquals($groupID,$user['usergroup']);
     }
 
+    /**
+     * @test
+     */
+    public function UserUpdateHisDataShouldUpdateDataIntoDbAndUpdateUsername(){
+        $setup[] = file_get_contents(t3lib_extMgm::extPath('t3registration_test', 'Tests/Fixtures/test_basic.ts'));
+        $constant[] = file_get_contents(t3lib_extMgm::extPath('t3registration_test', 'Tests/Fixtures/test_basic_const.ts'));
+        $this->conf = $this->generateTyposcriptSetup($setup,$constant);
+        $this->conf['usernameUpdateWhenChangeUsernameField'] = 1;
+        $groupID = $this->fixture->createFrontEndUserGroup(array('title' => 'group1'));
+        require(t3lib_extMgm::extPath('t3registration_test', 'Tests/Fixtures/piVarsFixture.php'));
+        $user = $userCorrectForDatabaseInsertion;
+        $userID = $this->fixture->createFrontEndUser($groupID,$user);
+        $this->fixture->loginFrontEndUser($userID);
+        $this->assertTrue($this->fixture->isLoggedIn());
+        $_POST['tx_t3registration_pi1'] = $userCorrectForPiVarsUpdate;
+        $_POST['tx_t3registration_pi1']['email'] = $userForUpdateEmail['email'];
+        $t3RegistrationMock = $this->getMock('tx_t3registration_pi1',array('sendEmail'));
+        $t3RegistrationMock->expects(new PHPUnit_Framework_MockObject_Matcher_InvokedCount(0))->method('sendEmail');
+        $html = $this->loadExtension($t3RegistrationMock);
+        $user = $this->findUserByEmail($userForUpdateEmail['email'],false);
+        $this->assertEquals(0,strlen($user['user_auth_code']));
+        $this->assertEquals(0,strlen($user['admin_auth_code']));
+        $this->assertEquals($userCorrectForPiVarsUpdate['last_name'],$user['last_name']);
+        $this->assertEquals($userForUpdateEmail['email'],$user['email']);
+        $this->assertEquals($userForUpdateEmail['email'],$user['username']);
+        $this->assertEquals(0,$user['disable']);
+        $this->assertEquals($groupID,$user['usergroup']);
+    }
+
 
     /***********************************DELETE USER*********************/
 
@@ -453,7 +539,7 @@ class PersistenceTest extends Tx_Phpunit_Database_TestCase {
      * User received an email to confirm his deletion and clicked on it so extension update his profile with deleted flag
      * @test
      */
-    public function UserClickedIntoEmailToConfirmHisUnsubscriptionShouldUpdateUserDeleteFlagToOneFRomDb(){
+    public function UserClickedIntoEmailToConfirmHisUnsubscriptionShouldUpdateUserDeleteFlagToOneFromDb(){
         require(t3lib_extMgm::extPath('t3registration_test', 'Tests/Fixtures/piVarsFixture.php'));
         $this->conf['approvalProcess'] = 'doubleOptin,adminApproval';
         $user = array_merge($userCorrectForDatabaseInsertion,$userCorrectForDatabaseUserConfirmation,$userGroupsBeforeConfirmation);
@@ -471,7 +557,7 @@ class PersistenceTest extends Tx_Phpunit_Database_TestCase {
      * User received an email to confirm his deletion and clicked on it so extension remove completely his data
      * @test
      */
-    public function UserClickedIntoEmailToConfirmHisUnsubscriptionAndConfiguratioForCompleteDeleteIsEnabledShouldRemoveUserFRomDb(){
+    public function UserClickedIntoEmailToConfirmHisUnsubscriptionAndConfiguratioForCompleteDeleteIsEnabledShouldRemoveUserFromDb(){
         require(t3lib_extMgm::extPath('t3registration_test', 'Tests/Fixtures/piVarsFixture.php'));
         $user = array_merge($userCorrectForDatabaseInsertion,$userCorrectForDatabaseUserConfirmation,$userGroupsBeforeConfirmation);
         unset($user['passwordTwice']);
