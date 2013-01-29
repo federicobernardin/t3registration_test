@@ -85,6 +85,7 @@ class FormRenderTest  extends tx_phpunit_testcase {
         unset($this->doc);
         unset($this->body);
         unset($this->xpath);
+		unset($_POST);
     }
 
 
@@ -113,6 +114,27 @@ class FormRenderTest  extends tx_phpunit_testcase {
         $this->assertXpath('/html/body/div/form/input[@name=\'tx_t3registration_pi1[tx_phpunit_is_dummy_record]\']',1);
     }
 
+	/**********************SEND CONFIRMATION AGAIN******************/
+	/**
+	 * Test standard HTML Output
+	 * @test
+	 */
+	public function CallExtensionToSendAgainConfirmationConde() {
+		$setup[] = file_get_contents(t3lib_extMgm::extPath('t3registration_test', 'Tests/Fixtures/test_basic.ts'));
+		$setup[] = file_get_contents(t3lib_extMgm::extPath('t3registration_test', 'Tests/Fixtures/resendConfirmationCode.ts'));
+		$this->conf = $this->generateTyposcriptSetup($setup);
+		$_POST['tx_t3registration_pi1']['action'] = 'resendConfirmationCode';
+		$html = $this->loadExtension();
+		$this->body = $this->getDomRootFromHTML($html);
+		$action = $this->xpath->query('/html/body/div/form/input[@name=\'tx_t3registration_pi1[action]\']/@value');
+		$this->assertXpath('/html/body/div/form/input[@name=\'tx_t3registration_pi1[action]\']/@value',1,'resendConfirmationCode');
+		$_POST['tx_t3registration_pi1']['action'] = 'resendConfirmationCode';
+		$_POST['tx_t3registration_pi1']['posted'] = 1;
+		$t3RegistrationMock = $this->getMock('tx_t3registration_pi1',array('sendAgainConfirmationEmail'));
+		$t3RegistrationMock->expects($this->once())->method('sendAgainConfirmationEmail');
+		$html = $this->loadExtension($t3RegistrationMock);
+	}
+
     /***********************EVALUATION RULE**************************/
 
     /**
@@ -130,8 +152,8 @@ class FormRenderTest  extends tx_phpunit_testcase {
         $this->body = $this->getDomRootFromHTML($html);
         $this->checkError('LastNameField','Surname is not correct');
         $this->checkError('FirstNameField','First should be a number');
-        $this->checkError('passwordField','Password is not correct');
-        $this->checkError('emailField','Email is not correct');
+		$this->checkError('passwordField','Password is not correct');
+		$this->checkError('emailField','Email is not correct');
     }
 
     /**
@@ -303,21 +325,21 @@ class FormRenderTest  extends tx_phpunit_testcase {
         $this->assertEquals($expectedText,$entries->item(0)->nodeValue);
     }
 
-    public function loadExtension() {
-        $content = '';
-        $GLOBALS['TSFE']->config['config']['disablePrefixComment'] = 1;
-        $methodAndClass = explode('->', $this->conf['userFunc']);
-        $classObj = t3lib_div::makeInstance($methodAndClass[0]);
-        $classObj->cObj = $this->cObj;
-        if (is_object($classObj) && method_exists($classObj, $methodAndClass[1])) {
-            $classObj->cObj = $this->cObj;
-            $content = call_user_func_array(array($classObj, $methodAndClass[1]
-                                            ), array(
-                                                    $content, $this->conf
-                                               ));
-        }
-        return $content;
-    }
+	public function loadExtension($mockedObject = null) {
+		$content = '';
+		$GLOBALS['TSFE']->config['config']['disablePrefixComment'] = 1;
+		$methodAndClass = explode('->', $this->conf['userFunc']);
+		$classObj = (is_null($mockedObject))?t3lib_div::makeInstance($methodAndClass[0]):$mockedObject;
+		$classObj->cObj = $this->cObj;
+		if (is_object($classObj) && method_exists($classObj, $methodAndClass[1])) {
+			$classObj->cObj = $this->cObj;
+			$content = call_user_func_array(array($classObj, $methodAndClass[1]
+											), array(
+													$content, $this->conf
+											   ));
+		}
+		return $content;
+	}
 
     public function initializeCobj($data = array()) {
         $this->cObj = new tslib_cObj();
