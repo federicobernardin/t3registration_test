@@ -140,6 +140,8 @@ class PersistenceTest extends Tx_Phpunit_Database_TestCase {
 
 
 
+
+
     /**
      * User completes registration process without double opt-in but post usergroup and usergroup are passed via pivars
      * @test
@@ -220,6 +222,81 @@ class PersistenceTest extends Tx_Phpunit_Database_TestCase {
         $this->assertEquals('4,5,3',$user['usergroup']);
     }
 
+	/**
+	 * User completes registration process with double opt-in and passing only one usergroup Via PiVars
+	 * @test
+	 */
+	public function UserCompletesRegistrationProcessWithDoubleOptinAndOnlyOneUsergroupViaPivarsShouldCreateUserAndDisableUserAndSendHimAnEmail() {
+		$setup[] = file_get_contents(t3lib_extMgm::extPath('t3registration_test', 'Tests/Fixtures/test_basic.ts'));
+		$constant[] = file_get_contents(t3lib_extMgm::extPath('t3registration_test', 'Tests/Fixtures/test_basic_const.ts'));
+		$this->conf = $this->generateTyposcriptSetup($setup,$constant);
+		$this->conf['approvalProcess'] = 'doubleOptin';
+		$this->conf['preUsergroup'] = '3';
+		require(t3lib_extMgm::extPath('t3registration_test', 'Tests/Fixtures/piVarsFixture.php'));
+		$userCorrectForDatabaseInsertion = array_merge($userCorrectForPiVars,$piVarsBaseForInsertingUser);
+		require(t3lib_extMgm::extPath('t3registration_test', 'Tests/Fixtures/CObjData.php'));
+		$this->initializeCobj($tt_contentDataWithUsergroup);
+		$_POST['tx_t3registration_pi1'] = $userCorrectForDatabaseInsertion;
+		$t3RegistrationMock = $this->getMock('tx_t3registration_pi1',array('sendEmail'));
+		$t3RegistrationMock->expects($this->once())->method('sendEmail');
+		$html = $this->loadExtension($t3RegistrationMock);
+		$this->assertTrue($this->fixture->existsExactlyOneRecord('fe_users','tx_phpunit_is_dummy_record=1'));
+		$user = $this->findUserByEmail($userCorrectForDatabaseInsertion['email'],false);
+		$this->assertGreaterThan(0,strlen($user['user_auth_code']));
+		$this->assertEquals(1,$user['disable']);
+		$this->assertEquals('3',$user['usergroup']);
+	}
+
+	/**
+	 * User completes registration process with double opt-in and passing empty usergroup Via PiVars
+	 * @test
+	 */
+	public function UserCompletesRegistrationProcessWithDoubleOptinAndEmptyUsergroupViaPivarsShouldCreateUserAndDisableUserAndSendHimAnEmail() {
+		$setup[] = file_get_contents(t3lib_extMgm::extPath('t3registration_test', 'Tests/Fixtures/test_basic.ts'));
+		$constant[] = file_get_contents(t3lib_extMgm::extPath('t3registration_test', 'Tests/Fixtures/test_basic_const.ts'));
+		$this->conf = $this->generateTyposcriptSetup($setup,$constant);
+		$this->conf['approvalProcess'] = 'doubleOptin';
+		$this->conf['preUsergroup'] = '';
+		require(t3lib_extMgm::extPath('t3registration_test', 'Tests/Fixtures/piVarsFixture.php'));
+		$userCorrectForDatabaseInsertion = array_merge($userCorrectForPiVars,$piVarsBaseForInsertingUser);
+		require(t3lib_extMgm::extPath('t3registration_test', 'Tests/Fixtures/CObjData.php'));
+		$this->initializeCobj($tt_contentDataWithUsergroup);
+		$_POST['tx_t3registration_pi1'] = $userCorrectForDatabaseInsertion;
+		$t3RegistrationMock = $this->getMock('tx_t3registration_pi1',array('sendEmail'));
+		$t3RegistrationMock->expects($this->once())->method('sendEmail');
+		$html = $this->loadExtension($t3RegistrationMock);
+		$this->assertTrue($this->fixture->existsExactlyOneRecord('fe_users','tx_phpunit_is_dummy_record=1'));
+		$user = $this->findUserByEmail($userCorrectForDatabaseInsertion['email'],false);
+		$this->assertGreaterThan(0,strlen($user['user_auth_code']));
+		$this->assertEquals(1,$user['disable']);
+		$this->assertEquals('',$user['usergroup']);
+	}
+
+	/**
+	 * User completes registration process with double opt-in and passing only one usergroup and some empty usergroup Via PiVars
+	 * @test
+	 */
+	public function UserCompletesRegistrationProcessWithDoubleOptinAndOnlyOneUsergroupWithEmptyValueViaPivarsShouldCreateUserAndDisableUserAndSendHimAnEmail() {
+		$setup[] = file_get_contents(t3lib_extMgm::extPath('t3registration_test', 'Tests/Fixtures/test_basic.ts'));
+		$constant[] = file_get_contents(t3lib_extMgm::extPath('t3registration_test', 'Tests/Fixtures/test_basic_const.ts'));
+		$this->conf = $this->generateTyposcriptSetup($setup,$constant);
+		$this->conf['approvalProcess'] = 'doubleOptin';
+		$this->conf['preUsergroup'] = ',3,,';
+		require(t3lib_extMgm::extPath('t3registration_test', 'Tests/Fixtures/piVarsFixture.php'));
+		$userCorrectForDatabaseInsertion = array_merge($userCorrectForPiVars,$piVarsBaseForInsertingUser);
+		require(t3lib_extMgm::extPath('t3registration_test', 'Tests/Fixtures/CObjData.php'));
+		$this->initializeCobj($tt_contentDataWithUsergroup);
+		$_POST['tx_t3registration_pi1'] = $userCorrectForDatabaseInsertion;
+		$t3RegistrationMock = $this->getMock('tx_t3registration_pi1',array('sendEmail'));
+		$t3RegistrationMock->expects($this->once())->method('sendEmail');
+		$html = $this->loadExtension($t3RegistrationMock);
+		$this->assertTrue($this->fixture->existsExactlyOneRecord('fe_users','tx_phpunit_is_dummy_record=1'));
+		$user = $this->findUserByEmail($userCorrectForDatabaseInsertion['email'],false);
+		$this->assertGreaterThan(0,strlen($user['user_auth_code']));
+		$this->assertEquals(1,$user['disable']);
+		$this->assertEquals('3',$user['usergroup']);
+	}
+
 
 
     /**
@@ -286,6 +363,52 @@ class PersistenceTest extends Tx_Phpunit_Database_TestCase {
         $this->assertEquals(0,$user['disable']);
         $this->assertEquals('3,4',$user['usergroup']);
     }
+
+	/**
+	 * User received email and clicked into link inside extension should update user record with post only one usergroup and enable it and send an email to user. This check a bug with empty array for usergroup with only one element.
+	 * @test
+	 */
+	public function confirmedUserRequestWithDoubleOptinAndChangeGroupWithOneGroupShouldUpdateUserAndGroupAndRemoveAuthcode(){
+		require(t3lib_extMgm::extPath('t3registration_test', 'Tests/Fixtures/piVarsFixture.php'));
+		$_POST['tx_t3registration_pi1'] = array();
+		$this->conf['approvalProcess'] = 'doubleOptin';
+		$user = array_merge($userCorrectForDatabaseInsertion,$userCorrectForDatabaseUserConfirmation,$userOneGroupBeforeConfirmation);
+		unset($user['passwordTwice']);
+		$this->fixture->createRecord('fe_users',$user);
+		$this->conf['preUsergroup'] = '2';
+		$this->conf['postUsergroup'] = '4';
+		$_POST['tx_t3registration_pi1'] = array('action' => 'userAuth','authcode' => $user['user_auth_code']);
+		$t3RegistrationMock = $this->getMock('tx_t3registration_pi1',array('sendEmail'));
+		$t3RegistrationMock->expects(new PHPUnit_Framework_MockObject_Matcher_InvokedCount(0))->method('sendEmail');
+		$html = $this->loadExtension($t3RegistrationMock);
+		$user = $this->findUserByEmail($userCorrectForDatabaseInsertion['email'],false);
+		$this->assertEquals(0,strlen($user['user_auth_code']));
+		$this->assertEquals(0,$user['disable']);
+		$this->assertEquals('4',$user['usergroup']);
+	}
+
+	/**
+	 * User received email and clicked into link inside extension should update user record with post only one usergroup and enable it and send an email to user. This check a bug with empty array for usergroup with only one element.
+	 * @test
+	 */
+	public function confirmedUserRequestWithDoubleOptinAndChangeGroupWithEmptyValueInGroupShouldUpdateUserAndGroupAndRemoveAuthcode(){
+		require(t3lib_extMgm::extPath('t3registration_test', 'Tests/Fixtures/piVarsFixture.php'));
+		$_POST['tx_t3registration_pi1'] = array();
+		$this->conf['approvalProcess'] = 'doubleOptin';
+		$user = array_merge($userCorrectForDatabaseInsertion,$userCorrectForDatabaseUserConfirmation,$userOneGroupBeforeConfirmation);
+		unset($user['passwordTwice']);
+		$this->fixture->createRecord('fe_users',$user);
+		$this->conf['preUsergroup'] = '2';
+		$this->conf['postUsergroup'] = '4,,';
+		$_POST['tx_t3registration_pi1'] = array('action' => 'userAuth','authcode' => $user['user_auth_code']);
+		$t3RegistrationMock = $this->getMock('tx_t3registration_pi1',array('sendEmail'));
+		$t3RegistrationMock->expects(new PHPUnit_Framework_MockObject_Matcher_InvokedCount(0))->method('sendEmail');
+		$html = $this->loadExtension($t3RegistrationMock);
+		$user = $this->findUserByEmail($userCorrectForDatabaseInsertion['email'],false);
+		$this->assertEquals(0,strlen($user['user_auth_code']));
+		$this->assertEquals(0,$user['disable']);
+		$this->assertEquals('4',$user['usergroup']);
+	}
 
 
     /**************************CONFIRMATION WITH ADMIN APPROVAL***************/

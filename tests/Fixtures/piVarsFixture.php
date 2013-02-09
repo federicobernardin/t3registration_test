@@ -22,6 +22,15 @@ $userGroupsAfterConfirmation = array(
 );
 
 
+$userOneGroupBeforeConfirmation = array(
+	'usergroup' => '2'
+);
+
+$userOneGroupAfterConfirmation = array(
+	'usergroup' => '4'
+);
+
+
 $userCorrectForPiVars = array(
     'first_name' => 'TestName',
     'last_name' => 'TestSurname',
