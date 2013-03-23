@@ -397,6 +397,28 @@ $tt_contentData = array (
                             </itemType>
                             <itemType index="_TOGGLE">0</itemType>
                         </section>
+                        <section index="13">
+                            <itemType index="databaseField">
+                                <el>
+                                    <field index="field">
+                                        <value index="vDEF">usergroup</value>
+                                    </field>
+                                    <field index="name">
+                                        <value index="vDEF"></value>
+                                    </field>
+                                    <field index="evaluation">
+                                        <value index="vDEF"></value>
+                                    </field>
+                                    <field index="regexp">
+                                        <value index="vDEF"></value>
+                                    </field>
+                                    <field index="hideInChangeProfile">
+                                        <value index="vDEF">1</value>
+                                    </field>
+                                </el>
+                            </itemType>
+                            <itemType index="_TOGGLE">0</itemType>
+                        </section>
                     </el>
                 </field>
             </language>

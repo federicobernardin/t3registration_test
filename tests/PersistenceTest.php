@@ -691,6 +691,58 @@ class PersistenceTest extends Tx_Phpunit_Database_TestCase {
         $this->assertFalse($this->fixture->existsRecord('fe_users','email=' . $GLOBALS['TYPO3_DB']->fullQuoteStr($userCorrectForDatabaseInsertion['email'])));
     }
 
+	//USER GROUP FROM FORM
+
+	/**
+	 * User chooses a group form select into the form
+	 * @test
+	 */
+	public function UserGroupChosenFromSelectWithoutConfirmationAndWithoutGroupInFlexForm(){
+		$setup[] = file_get_contents(t3lib_extMgm::extPath('t3registration_test', 'Tests/Fixtures/test_basic.ts'));
+		$constant[] = file_get_contents(t3lib_extMgm::extPath('t3registration_test', 'Tests/Fixtures/test_basic_const.ts'));
+		$this->conf = $this->generateTyposcriptSetup($setup,$constant);
+		$this->conf['approvalProcess'] = '';
+		$this->conf['preUsergroup'] = '';
+		require(t3lib_extMgm::extPath('t3registration_test', 'Tests/Fixtures/piVarsFixture.php'));
+		$userCorrectForDatabaseInsertion = array_merge($userCorrectForPiVars,$piVarsBaseForInsertingUser,$userFromPiVars);
+		require(t3lib_extMgm::extPath('t3registration_test', 'Tests/Fixtures/CObjData.php'));
+		$this->initializeCobj($tt_contentDataWithUsergroup);
+		$_POST['tx_t3registration_pi1'] = $userCorrectForDatabaseInsertion;
+		$t3RegistrationMock = $this->getMock('tx_t3registration_pi1',array('sendEmail'));
+		//$t3RegistrationMock->expects($this->once())->method('sendEmail');
+		$html = $this->loadExtension($t3RegistrationMock);
+		$this->assertTrue($this->fixture->existsExactlyOneRecord('fe_users','tx_phpunit_is_dummy_record=1'));
+		$user = $this->findUserByEmail($userCorrectForDatabaseInsertion['email'],false);
+		$this->assertEquals(0,strlen($user['user_auth_code']));
+		$this->assertEquals(0,$user['disable']);
+		$this->assertEquals('5',$user['usergroup']);
+	}
+
+	/**
+	 * User chooses a group form select into the form and post usergroup
+	 * @test
+	 */
+	public function UserGroupChosenFromSelectWithoutConfirmationAndWithPostGroupInFlexForm(){
+		$setup[] = file_get_contents(t3lib_extMgm::extPath('t3registration_test', 'Tests/Fixtures/test_basic.ts'));
+		$constant[] = file_get_contents(t3lib_extMgm::extPath('t3registration_test', 'Tests/Fixtures/test_basic_const.ts'));
+		$this->conf = $this->generateTyposcriptSetup($setup,$constant);
+		$this->conf['approvalProcess'] = '';
+		$this->conf['postUsergroup'] = '6';
+		require(t3lib_extMgm::extPath('t3registration_test', 'Tests/Fixtures/piVarsFixture.php'));
+		$userCorrectForDatabaseInsertion = array_merge($userCorrectForPiVars,$piVarsBaseForInsertingUser,$userFromPiVars);
+		require(t3lib_extMgm::extPath('t3registration_test', 'Tests/Fixtures/CObjData.php'));
+		$this->initializeCobj($tt_contentDataWithUsergroup);
+		$_POST['tx_t3registration_pi1'] = $userCorrectForDatabaseInsertion;
+		$t3RegistrationMock = $this->getMock('tx_t3registration_pi1',array('sendEmail'));
+		//$t3RegistrationMock->expects($this->once())->method('sendEmail');
+		$html = $this->loadExtension($t3RegistrationMock);
+		$this->assertTrue($this->fixture->existsExactlyOneRecord('fe_users','tx_phpunit_is_dummy_record=1'));
+		$user = $this->findUserByEmail($userCorrectForDatabaseInsertion['email'],false);
+		$this->assertEquals(0,strlen($user['user_auth_code']));
+		$this->assertEquals(0,$user['disable']);
+		$this->assertEquals('5,6',$user['usergroup']);
+	}
+
 
     /**
      * This function search into db for specific email user

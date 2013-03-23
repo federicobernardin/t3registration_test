@@ -31,6 +31,14 @@ $userOneGroupAfterConfirmation = array(
 );
 
 
+/**
+ * This part test group defined into the form
+ */
+$userFromPiVars = array(
+	'usergroup' => '5'
+);
+
+
 $userCorrectForPiVars = array(
     'first_name' => 'TestName',
     'last_name' => 'TestSurname',
